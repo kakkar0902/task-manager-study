@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tasks</title>
+<style>
+	body {
+		font-family: Arial, sans-serif;
+		max-width: 840px;
+		margin: 2rem auto;
+		padding: 0 1rem;
+	}
+
+	.card {
+		border: 1px solid #ddd;
+		border-radius: 8px;
+		padding: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.row {
+		display: flex;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+
+	input[type="text"], textarea {
+		width: 100%;
+		padding: 0.5rem;
+		margin: 0.25rem 0 0.5rem;
+		box-sizing: border-box;
+	}
+
+	button {
+		padding: 0.45rem 0.8rem;
+		cursor: pointer;
+	}
+
+	.complete {
+		color: #1b7f1b;
+		font-weight: bold;
+	}
+
+	.pending {
+		color: #8a5b00;
+		font-weight: bold;
+	}
+
+	.error {
+		background: #ffe6e6;
+		border: 1px solid #ffb3b3;
+		padding: 0.75rem;
+		margin-bottom: 1rem;
+	}
+</style>
+</head>
+
+<body>
+
+<h1>Tasks Page</h1>
+
+<p><a href="{{ url_for('home') }}">Back to home</a></p>
+
+{% if request.args.get('error') %}
+<div class="error">{{ request.args.get('error') }}</div>
+{% endif %}
+
+<div class="card">
+	<h2>Create Task</h2>
+	<form action="{{ url_for('add_task') }}" method="post">
+		<label for="title">Title</label>
+		<input id="title" name="title" type="text" placeholder="Enter task title" required>
+
+		<label for="description">Description</label>
+		<textarea id="description" name="description" rows="3" placeholder="Enter task details"></textarea>
+
+		<button type="submit">Add Task</button>
+	</form>
+</div>
+
+<h2>All Tasks</h2>
+
+{% if tasks %}
+	{% for task in tasks %}
+	<div class="card">
+		<p>
+			<strong>Status:</strong>
+			<span class="{{ 'complete' if task.completed else 'pending' }}">
+				{{ 'Completed' if task.completed else 'Pending' }}
+			</span>
+		</p>
+		<p><strong>Created:</strong> {{ task.date_created.strftime('%Y-%m-%d %H:%M') }}</p>
+
+		<form action="{{ url_for('edit_task', task_id=task.id) }}" method="post">
+			<label for="title-{{ task.id }}">Title</label>
+			<input id="title-{{ task.id }}" name="title" type="text" value="{{ task.title }}" required>
+
+			<label for="description-{{ task.id }}">Description</label>
+			<textarea id="description-{{ task.id }}" name="description" rows="3">{{ task.description or '' }}</textarea>
+
+			<label>
+				<input type="checkbox" name="completed" {% if task.completed %}checked{% endif %}>
+				Mark as completed
+			</label>
+
+			<div class="row">
+				<button type="submit">Update</button>
+			</div>
+		</form>
+
+		<div class="row" style="margin-top: 0.5rem;">
+			<form action="{{ url_for('delete_task', task_id=task.id) }}" method="post" onsubmit="return confirm('Delete this task?');">
+				<button type="submit">Delete</button>
+			</form>
+		</div>
+	</div>
+	{% endfor %}
+{% else %}
+	<p>No tasks yet. Add your first task above.</p>
+{% endif %}
+
+</body>
+</html>
