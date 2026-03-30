@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Register</title>
+<style>
+	body {
+		font-family: Arial, sans-serif;
+		max-width: 560px;
+		margin: 2rem auto;
+		padding: 0 1rem;
+	}
+
+	.card {
+		border: 1px solid #ddd;
+		border-radius: 8px;
+		padding: 1rem;
+	}
+
+	input[type="text"], input[type="email"], input[type="password"] {
+		width: 100%;
+		padding: 0.5rem;
+		margin: 0.25rem 0 0.75rem;
+		box-sizing: border-box;
+	}
+
+	button {
+		padding: 0.45rem 0.8rem;
+		cursor: pointer;
+	}
+
+	.error {
+		background: #ffe6e6;
+		border: 1px solid #ffb3b3;
+		padding: 0.75rem;
+		margin-bottom: 1rem;
+	}
+</style>
+</head>
+<body>
+
+<h1>Register</h1>
+<p><a href="{{ url_for('home') }}">Back to home</a></p>
+
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
+
+<div class="card">
+	<form method="post" action="{{ url_for('register') }}">
+		<label for="username">Username</label>
+		<input id="username" name="username" type="text" required>
+
+		<label for="email">Email</label>
+		<input id="email" name="email" type="email" required>
+
+		<label for="password">Password</label>
+		<input id="password" name="password" type="password" required>
+
+		<label for="confirm_password">Confirm Password</label>
+		<input id="confirm_password" name="confirm_password" type="password" required>
+
+		<button type="submit">Create Account</button>
+	</form>
+</div>
+
+<p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+
+</body>
+</html>

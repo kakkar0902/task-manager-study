@@ -59,6 +59,10 @@
 <h1>Tasks Page</h1>
 
 <p><a href="{{ url_for('home') }}">Back to home</a></p>
+<p>Signed in as <strong>{{ g.user.username }}</strong></p>
+<form action="{{ url_for('logout') }}" method="post" style="margin-bottom: 1rem;">
+	<button type="submit">Logout</button>
+</form>
 
 {% if request.args.get('error') %}
 <div class="error">{{ request.args.get('error') }}</div>

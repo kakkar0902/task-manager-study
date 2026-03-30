@@ -1,6 +1,6 @@
 # task-manager-study
 
-Week 3 adds SQLite persistence with Flask-SQLAlchemy and full CRUD for tasks.
+This project includes Week 3 (task CRUD with SQLite) and Week 4 (authentication with user registration/login and protected routes).
 
 ## Setup
 
@@ -25,6 +25,14 @@ python app.py
 - Read: all tasks are listed on the tasks page.
 - Update: edit title/description/completed state and click Update.
 - Delete: click Delete for a task.
+
+## Week 4 Authentication Features
+
+- Register: create a user account with username, email, and password.
+- Login: sign in using username or email.
+- Password Hashing: passwords are stored securely with `Flask-Bcrypt`.
+- Protected Routes: `/tasks` and task CRUD endpoints require login.
+- Logout: clear session and return to home page.
 
 ## Notes
 
