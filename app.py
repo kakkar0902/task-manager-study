@@ -1,3 +1,6 @@
+
+print("Flask app is starting up...")
+
 from datetime import datetime
 from functools import wraps
 
