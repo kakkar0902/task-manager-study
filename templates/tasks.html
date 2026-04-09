@@ -1,126 +1,141 @@
 <!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Tasks</title>
-<style>
-	body {
-		font-family: Arial, sans-serif;
-		max-width: 840px;
-		margin: 2rem auto;
-		padding: 0 1rem;
-	}
-
-	.card {
-		border: 1px solid #ddd;
-		border-radius: 8px;
-		padding: 1rem;
-		margin-bottom: 1rem;
-	}
-
-	.row {
-		display: flex;
-		gap: 0.5rem;
-		flex-wrap: wrap;
-	}
-
-	input[type="text"], textarea {
-		width: 100%;
-		padding: 0.5rem;
-		margin: 0.25rem 0 0.5rem;
-		box-sizing: border-box;
-	}
-
-	button {
-		padding: 0.45rem 0.8rem;
-		cursor: pointer;
-	}
-
-	.complete {
-		color: #1b7f1b;
-		font-weight: bold;
-	}
-
-	.pending {
-		color: #8a5b00;
-		font-weight: bold;
-	}
-
-	.error {
-		background: #ffe6e6;
-		border: 1px solid #ffb3b3;
-		padding: 0.75rem;
-		margin-bottom: 1rem;
-	}
-</style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tasks</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		body {
+			background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+			min-height: 100vh;
+		}
+		.card-task {
+			border-radius: 1rem;
+			box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+			padding: 2rem 2.5rem;
+			background: #fff;
+			margin-bottom: 2rem;
+		}
+		.brand {
+			font-weight: 700;
+			color: #185a9d;
+			letter-spacing: 1px;
+		}
+		.btn-modern {
+			background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+			color: #fff;
+			border: none;
+			border-radius: 2rem;
+			padding: 0.5rem 2rem;
+			font-weight: 600;
+			transition: background 0.2s;
+		}
+		.btn-modern:hover {
+			background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+		}
+		.complete {
+			color: #1b7f1b;
+			font-weight: bold;
+		}
+		.pending {
+			color: #8a5b00;
+			font-weight: bold;
+		}
+		.error {
+			background: #ffe6e6;
+			border: 1px solid #ffb3b3;
+			padding: 0.75rem;
+			border-radius: 0.5rem;
+			margin-bottom: 1rem;
+		}
+	</style>
 </head>
-
 <body>
-
-<h1>Tasks Page</h1>
-
-<p><a href="{{ url_for('home') }}">Back to home</a></p>
-<p>Signed in as <strong>{{ g.user.username }}</strong></p>
-<form action="{{ url_for('logout') }}" method="post" style="margin-bottom: 1rem;">
-	<button type="submit">Logout</button>
-</form>
-
-{% if request.args.get('error') %}
-<div class="error">{{ request.args.get('error') }}</div>
-{% endif %}
-
-<div class="card">
-	<h2>Create Task</h2>
-	<form action="{{ url_for('add_task') }}" method="post">
-		<label for="title">Title</label>
-		<input id="title" name="title" type="text" placeholder="Enter task title" required>
-
-		<label for="description">Description</label>
-		<textarea id="description" name="description" rows="3" placeholder="Enter task details"></textarea>
-
-		<button type="submit">Add Task</button>
-	</form>
-</div>
-
-<h2>All Tasks</h2>
-
-{% if tasks %}
-	{% for task in tasks %}
-	<div class="card">
-		<p>
-			<strong>Status:</strong>
-			<span class="{{ 'complete' if task.completed else 'pending' }}">
-				{{ 'Completed' if task.completed else 'Pending' }}
-			</span>
-		</p>
-		<p><strong>Created:</strong> {{ task.date_created.strftime('%Y-%m-%d %H:%M') }}</p>
-
-		<form action="{{ url_for('edit_task', task_id=task.id) }}" method="post">
-			<label for="title-{{ task.id }}">Title</label>
-			<input id="title-{{ task.id }}" name="title" type="text" value="{{ task.title }}" required>
-
-			<label for="description-{{ task.id }}">Description</label>
-			<textarea id="description-{{ task.id }}" name="description" rows="3">{{ task.description or '' }}</textarea>
-
-			<label>
-				<input type="checkbox" name="completed" {% if task.completed %}checked{% endif %}>
-				Mark as completed
-			</label>
-
-			<div class="row">
-				<button type="submit">Update</button>
-			</div>
-		</form>
-
-		<div class="row" style="margin-top: 0.5rem;">
-			<form action="{{ url_for('delete_task', task_id=task.id) }}" method="post" onsubmit="return confirm('Delete this task?');">
-				<button type="submit">Delete</button>
+<div class="container py-5">
+	<div class="card-task mx-auto mb-4" style="max-width: 700px;">
+		<h1 class="mb-3 text-center brand">Tasks</h1>
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<a href="{{ url_for('home') }}" class="btn btn-link">&larr; Back to home</a>
+			<span>Signed in as <strong>{{ g.user.username }}</strong></span>
+			<form action="{{ url_for('logout') }}" method="post" class="d-inline">
+				<button type="submit" class="btn btn-outline-danger">Logout</button>
 			</form>
 		</div>
-	</div>
-	{% endfor %}
-{% else %}
-	<p>No tasks yet. Add your first task above.</p>
-{% endif %}
 
+		{% if request.args.get('error') %}
+		<div class="error">{{ request.args.get('error') }}</div>
+		{% endif %}
+
+		<div class="card mb-4 p-4">
+			<h2 class="mb-3">Create Task</h2>
+			<form action="{{ url_for('add_task') }}" method="post">
+				<div class="mb-3">
+					<label for="title" class="form-label">Title</label>
+					<input id="title" name="title" type="text" class="form-control" placeholder="Enter task title" required>
+				</div>
+				<div class="mb-3">
+					<label for="description" class="form-label">Description</label>
+					<textarea id="description" name="description" rows="3" class="form-control" placeholder="Enter task details"></textarea>
+				</div>
+				<div class="d-grid">
+					<button type="submit" class="btn btn-modern">Add Task</button>
+				</div>
+			</form>
+		</div>
+
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h2 class="mb-0">All Tasks</h2>
+			<div class="btn-group" role="group" aria-label="Task filter">
+				<a href="{{ url_for('tasks', filter='all') }}" class="btn btn-outline-primary {% if filter_status == 'all' %}active{% endif %}">All</a>
+				<a href="{{ url_for('tasks', filter='completed') }}" class="btn btn-outline-success {% if filter_status == 'completed' %}active{% endif %}">Completed</a>
+				<a href="{{ url_for('tasks', filter='pending') }}" class="btn btn-outline-warning {% if filter_status == 'pending' %}active{% endif %}">Pending</a>
+			</div>
+		</div>
+
+		{% if tasks %}
+			{% for task in tasks %}
+			<div class="card mb-3 p-3">
+				<div class="d-flex justify-content-between align-items-center mb-2">
+					<div>
+						<strong>Status:</strong>
+						<span class="{{ 'complete' if task.completed else 'pending' }}">
+							{{ 'Completed' if task.completed else 'Pending' }}
+						</span>
+					</div>
+					<div><strong>Created:</strong> {{ task.date_created.strftime('%Y-%m-%d %H:%M') }}</strong></div>
+				</div>
+				<form action="{{ url_for('edit_task', task_id=task.id) }}" method="post" class="mb-2">
+					<div class="row g-2 align-items-end">
+						<div class="col-md-5">
+							<label for="title-{{ task.id }}" class="form-label">Title</label>
+							<input id="title-{{ task.id }}" name="title" type="text" class="form-control" value="{{ task.title }}" required>
+						</div>
+						<div class="col-md-5">
+							<label for="description-{{ task.id }}" class="form-label">Description</label>
+							<textarea id="description-{{ task.id }}" name="description" rows="1" class="form-control">{{ task.description or '' }}</textarea>
+						</div>
+						<div class="col-md-2 d-flex align-items-center">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="completed" id="completed-{{ task.id }}" {% if task.completed %}checked{% endif %}>
+								<label class="form-check-label" for="completed-{{ task.id }}">Done</label>
+							</div>
+						</div>
+					</div>
+					<div class="d-flex gap-2 mt-2">
+						<button type="submit" class="btn btn-success">Update</button>
+					</div>
+				</form>
+				<form action="{{ url_for('delete_task', task_id=task.id) }}" method="post" onsubmit="return confirm('Delete this task?');" class="d-inline">
+					<button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+				</form>
+			</div>
+			{% endfor %}
+		{% else %}
+			<p>No tasks yet. Add your first task above.</p>
+		{% endif %}
+	</div>
+</div>
 </body>
 </html>

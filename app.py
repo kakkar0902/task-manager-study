@@ -130,8 +130,14 @@ def logout():
 @app.route("/tasks")
 @login_required
 def tasks():
-    all_tasks = Task.query.order_by(Task.date_created.desc()).all()
-    return render_template("tasks.html", tasks=all_tasks)
+    filter_status = request.args.get("filter", "all")
+    if filter_status == "completed":
+        all_tasks = Task.query.filter_by(completed=True).order_by(Task.date_created.desc()).all()
+    elif filter_status == "pending":
+        all_tasks = Task.query.filter_by(completed=False).order_by(Task.date_created.desc()).all()
+    else:
+        all_tasks = Task.query.order_by(Task.date_created.desc()).all()
+    return render_template("tasks.html", tasks=all_tasks, filter_status=filter_status)
 
 
 @app.route("/tasks/add", methods=["POST"])
