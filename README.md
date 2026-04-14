@@ -1,40 +1,67 @@
 # task-manager-study
 
-This project includes Week 3 (task CRUD with SQLite) and Week 4 (authentication with user registration/login and protected routes).
+This project is a task manager made with Flask.
+
+## What We Did
+
+- created a home page
+- created a register page
+- created a login page
+- created a tasks page
+- added user registration with username, email, and password
+- added user login with username or email
+- added logout
+- added password hashing using Flask-Bcrypt
+- added protected routes for logged-in users
+- added task create feature
+- added task view feature
+- added task update feature
+- added task delete feature
+- added task filter for all, completed, and pending tasks
+- used SQLite database to store data
+- used HTML templates for frontend pages
+- used Bootstrap for styling
+
+## Files Used
+
+- `app.py` for main Flask app, models, and routes
+- `templates/index.html` for home page
+- `templates/register.html` for register page
+- `templates/login.html` for login page
+- `templates/tasks.html` for tasks page
+- `requirements.txt` for project dependencies
+- `week1_practice.py` for Python practice
+
+## Database
+
+This project uses SQLite.
+
+It has:
+
+- User model
+- Task model
+
+## Routes
+
+- `/`
+- `/register`
+- `/login`
+- `/logout`
+- `/tasks`
+- `/tasks/add`
+- `/tasks/<int:task_id>/edit`
+- `/tasks/<int:task_id>/delete`
 
 ## Setup
 
-1. Activate your virtual environment.
-2. Install dependencies:
+1. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Run the app:
+2. Run the project:
 
 ```bash
 python app.py
 ```
-
-4. Open http://127.0.0.1:5000/ and click "Go to Tasks".
-
-## CRUD Features
-
-- Create: add a task from the create form.
-- Read: all tasks are listed on the tasks page.
-- Update: edit title/description/completed state and click Update.
-- Delete: click Delete for a task.
-
-## Week 4 Authentication Features
-
-- Register: create a user account with username, email, and password.
-- Login: sign in using username or email.
-- Password Hashing: passwords are stored securely with `Flask-Bcrypt`.
-- Protected Routes: `/tasks` and task CRUD endpoints require login.
-- Logout: clear session and return to home page.
-
-## Notes
-
-- Database file is created automatically as `tasks.db` when app starts.
-- If the table does not exist, it is created automatically.
